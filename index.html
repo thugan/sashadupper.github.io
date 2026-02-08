@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Дюпай пойнти</title>
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#111a33;
+      --card:#0f1730cc;
+      --stroke:#2a3a73;
+      --text:#eaf0ff;
+      --muted:#9fb3ff;
+      --btn:#1a2a5a;
+      --btn2:#243a7d;
+      --good:#22c55e;
+      --bad:#ef4444;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, #2947ff33, transparent 60%),
+        radial-gradient(900px 600px at 80% 80%, #22c55e22, transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      padding:20px;
+    }
+    .wrap{
+      width:min(560px, 100%);
+    }
+    .card{
+      background:var(--card);
+      border:1px solid rgba(42,58,115,.7);
+      box-shadow:var(--shadow);
+      border-radius:24px;
+      padding:22px;
+      backdrop-filter: blur(10px);
+    }
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .title{
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(159,179,255,.35);
+      color:var(--muted);
+      background: rgba(15,23,48,.55);
+    }
+
+    .score{
+      text-align:center;
+      padding:18px 12px 6px;
+    }
+    .number{
+      font-size:88px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-2px;
+      margin:0;
+      text-shadow: 0 8px 30px rgba(41,71,255,.25);
+      transition: transform .12s ease;
+    }
+    .number.bump{ transform: scale(1.04); }
+    .hint{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      margin-top:18px;
+    }
+    button{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      color:var(--text);
+      background: linear-gradient(180deg, var(--btn2), var(--btn));
+      border:1px solid rgba(159,179,255,.22);
+      border-radius:16px;
+      padding:14px 12px;
+      font-weight:800;
+      font-size:18px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+      transition: transform .08s ease, filter .15s ease, border-color .15s ease;
+      user-select:none;
+    }
+    button:active{ transform: translateY(1px) scale(.99); }
+    button:hover{ filter: brightness(1.06); border-color: rgba(159,179,255,.35); }
+
+    .row{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+    }
+    .row button{ flex:1; font-size:16px; padding:12px 12px; }
+    .danger{
+      background: linear-gradient(180deg, #7f1d1d, #3a0d0d);
+      border-color: rgba(239,68,68,.35);
+    }
+    .success{
+      background: linear-gradient(180deg, #14532d, #0b2a17);
+      border-color: rgba(34,197,94,.35);
+    }
+
+    .bottom{
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    input{
+      flex:1;
+      min-width:160px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(159,179,255,.25);
+      background: rgba(10,14,30,.55);
+      color: var(--text);
+      outline:none;
+      font-weight:700;
+    }
+    input::placeholder{ color: rgba(159,179,255,.65); }
+
+    .footerBtn{
+      width:100%;
+      margin-top:14px;
+      padding:14px 12px;
+      font-size:16px;
+      background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+      border-color: rgba(59,130,246,.45);
+    }
+    .log{
+      margin-top:10px;
+      font-size:13px;
+      color: rgba(234,240,255,.8);
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(159,179,255,.25);
+      background: rgba(10,14,30,.35);
+      min-height:40px;
+    }
+
+    @media (max-width:420px){
+      .number{ font-size:72px; }
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div class="title">Очки</div>
+        <div class="badge" id="status">Готово</div>
+      </div>
+
+      <div class="score">
+        <p class="number" id="score">0</p>
+        <p class="hint">Тицяй кнопки — пойнти дюпаются. Можна додати своє число нижче.</p>
+      </div>
+
+      <div class="grid">
+        <button data-add="1">+1</button>
+        <button data-add="5">+5</button>
+        <button data-add="10">+10</button>
+        <button data-add="25">+25</button>
+        <button data-add="50">+50</button>
+        <button data-add="100">+100</button>
+      </div>
+
+      <div class="row">
+        <button class="danger" id="minus">Відняти 1</button>
+        <button class="success" id="reset">Скинути</button>
+      </div>
+
+      <div class="bottom">
+        <input id="custom" type="number" placeholder="Своє число, напр. 7" />
+        <button id="apply">Додати</button>
+      </div>
+
+      <div class="log" id="log">Тут буде повідомлення…</div>
+
+      <button class="footerBtn" id="bottomBtn">Вивести на Sashafritche.com🙂</button>
+    </div>
+  </div>
+
+  <script>
+    const scoreEl = document.getElementById('score');
+    const statusEl = document.getElementById('status');
+    const logEl = document.getElementById('log');
+    const customEl = document.getElementById('custom');
+
+    let score = 0;
+
+    function bump(){
+      scoreEl.classList.add('bump');
+      setTimeout(()=>scoreEl.classList.remove('bump'), 120);
+    }
+
+    function setStatus(text){
+      statusEl.textContent = text;
+      setTimeout(()=> statusEl.textContent = "Готово", 1200);
+    }
+
+    function render(msg){
+      scoreEl.textContent = score;
+      bump();
+      if (msg) logEl.textContent = msg;
+    }
+
+    // кнопки +N
+    document.querySelectorAll('button[data-add]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const n = Number(btn.dataset.add || 0);
+        score += n;
+        render(`Додано +${n}. Тепер: ${score}`);
+        setStatus(`+${n}`);
+      });
+    });
+
+    // мінус
+    document.getElementById('minus').addEventListener('click', ()=>{
+      score -= 1;
+      render(`Віднято 1. Тепер: ${score}`);
+      setStatus('-1');
+    });
+
+    // скинути
+    document.getElementById('reset').addEventListener('click', ()=>{
+      score = 0;
+      render('Скинуто до 0');
+      setStatus('Reset');
+    });
+
+    // додати своє число
+    document.getElementById('apply').addEventListener('click', ()=>{
+      const n = Number(customEl.value);
+      if (!Number.isFinite(n) || customEl.value.trim()===""){
+        render('Впиши число в поле 🙂');
+        setStatus('Помилка');
+        return;
+      }
+      score += n;
+      render(`Додано +${n}. Тепер: ${score}`);
+      setStatus(`+${n}`);
+      customEl.value = "";
+    });
+
+    // нижня кнопка
+    document.getElementById('bottomBtn').addEventListener('click', ()=>{
+      render(`Нижня кнопка натиснута! Очки не змінились: ${score}`);
+      setStatus('OK');
+    });
+
+    render('Починай дюпати 👇');
+  </script>
+</body>
+</html>
