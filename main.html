@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Сова розповідає про Федорівку</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121b2f;
+      --text:#e8f0ff;
+      --muted:#a9b8d6;
+      --accent:#58cc02;  /* дуолінго-зелений */
+      --accent2:#2bff8a;
+      --danger:#ff5c7a;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(88,204,2,.14), transparent 60%),
+        radial-gradient(900px 600px at 80% 20%, rgba(43,255,138,.10), transparent 55%),
+        radial-gradient(900px 700px at 50% 100%, rgba(255,92,122,.10), transparent 60%),
+        var(--bg);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+    .wrap{
+      width:min(980px, 100%);
+      display:grid;
+      gap:18px;
+      grid-template-columns: 1.1fr .9fr;
+    }
+    @media (max-width: 900px){
+      .wrap{grid-template-columns:1fr}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      overflow:hidden;
+    }
+    header{
+      padding:18px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.15);
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width: 0;
+    }
+    .dot{
+      width:12px;height:12px;border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(88,204,2,.15);
+      flex:0 0 auto;
+    }
+    .title{
+      display:flex; flex-direction:column;
+      min-width:0;
+    }
+    .title b{
+      font-size:15px;
+      letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .title span{
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(18,27,47,.6);
+      color:var(--muted);
+      font-size:12px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .content{ padding:18px 20px 20px; }
+    .hero{
+      display:grid;
+      grid-template-columns: 220px 1fr;
+      gap:16px;
+      align-items:center;
+    }
+    @media (max-width: 560px){
+      .hero{grid-template-columns:1fr}
+    }
+
+    /* Сова (простий SVG-стиль через CSS) */
+    .owl{
+      width:220px;height:220px;
+      margin:auto;
+      position:relative;
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,.4));
+    }
+    .owl .body{
+      position:absolute; inset:18px 22px 22px 22px;
+      border-radius: 120px 120px 90px 90px;
+      background: radial-gradient(120px 120px at 40% 35%, rgba(255,255,255,.22), transparent 60%),
+                  linear-gradient(180deg, #6bf013, #2a9e00);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .owl .belly{
+      position:absolute; left:50%; top:58%;
+      transform:translate(-50%,-50%);
+      width:122px;height:135px;
+      border-radius: 70px 70px 60px 60px;
+      background: linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.15));
+      border: 1px solid rgba(255,255,255,.15);
+    }
+    .owl .eye{
+      position:absolute; top:62px;
+      width:76px;height:76px;
+      border-radius:999px;
+      background: radial-gradient(circle at 38% 35%, #ffffff, #e9f2ff 55%, #cfe1ff 100%);
+      border: 1px solid rgba(0,0,0,.12);
+    }
+    .owl .eye.left{ left:44px; }
+    .owl .eye.right{ right:44px; }
+
+    .owl .pupil{
+      position:absolute; top:18px; left:22px;
+      width:32px;height:32px;border-radius:999px;
+      background: radial-gradient(circle at 35% 35%, #2a2a2a, #000);
+      box-shadow: inset 0 0 0 6px rgba(88,204,2,.20);
+      transition: transform .18s ease;
+    }
+    .owl .pupil::after{
+      content:"";
+      position:absolute; top:7px; left:8px;
+      width:7px;height:7px;border-radius:999px;
+      background: rgba(255,255,255,.9);
+    }
+    .owl .beak{
+      position:absolute; top:120px; left:50%;
+      transform: translateX(-50%);
+      width:0;height:0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 26px solid #ffcc3b;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
+    }
+    .owl .wing{
+      position:absolute; top:108px;
+      width:60px;height:80px;border-radius: 60px;
+      background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.18));
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .owl .wing.left{ left:6px; transform: rotate(-18deg); }
+    .owl .wing.right{ right:6px; transform: rotate(18deg); }
+
+    .speech{
+      background: rgba(18,27,47,.72);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding:14px 14px;
+      position:relative;
+    }
+    .speech::before{
+      content:"";
+      position:absolute;
+      left:-10px; top:36px;
+      width:0;height:0;
+      border-top:10px solid transparent;
+      border-bottom:10px solid transparent;
+      border-right: 10px solid rgba(18,27,47,.72);
+      filter: drop-shadow(-2px 2px 0 rgba(255,255,255,.06));
+    }
+    @media (max-width: 560px){
+      .speech::before{display:none}
+    }
+    .speech h1{
+      margin:0 0 8px;
+      font-size:20px;
+      letter-spacing:.2px;
+    }
+    .speech p{
+      margin:0 0 10px;
+      color:var(--muted);
+      line-height:1.45;
+      font-size:14px;
+    }
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+    button{
+      appearance:none;
+      border:none;
+      border-radius: 14px;
+      padding:10px 12px;
+      font-weight:650;
+      font-size:13px;
+      cursor:pointer;
+      transition: transform .06s ease, filter .2s ease, opacity .2s ease;
+      user-select:none;
+    }
+    button:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      color: #062100;
+      box-shadow: 0 12px 24px rgba(88,204,2,.18);
+    }
+    .btn-ghost{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .btn-warn{
+      background: rgba(255,92,122,.14);
+      color: #ffd4dc;
+      border:1px solid rgba(255,92,122,.35);
+    }
+
+    .side{
+      padding:18px 20px 20px;
+    }
+    .side h2{
+      margin:0 0 10px;
+      font-size:16px;
+    }
+    .note{
+      font-size:13px;
+      color: var(--muted);
+      line-height:1.45;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px 12px;
+    }
+    .timeline{
+      margin-top:12px;
+      display:grid;
+      gap:10px;
+    }
+    .item{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(18,27,47,.55);
+      border-radius:16px;
+      padding:12px 12px;
+    }
+    .item .meta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      color: var(--muted);
+      font-size:12px;
+      margin-bottom:6px;
+      align-items:center;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+    }
+    .badge.red{
+      border-color: rgba(255,92,122,.35);
+      background: rgba(255,92,122,.12);
+      color: #ffd4dc;
+    }
+    .item p{ margin:0; color: var(--text); font-size:13px; line-height:1.4;}
+    footer{
+      grid-column: 1 / -1;
+      text-align:center;
+      color: rgba(255,255,255,.55);
+      font-size:12px;
+      padding:6px 2px 0;
+    }
+    a{ color: var(--accent2); text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+    .small{
+      font-size:12px;
+      color: rgba(255,255,255,.58);
+      line-height:1.4;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <header>
+        <div class="brand">
+          <div class="dot"></div>
+          <div class="title">
+            <b>Сова-репортерка</b>
+            <span>Нейтрально про події у Федорівці</span>
+          </div>
+        </div>
+        <div class="pill" id="statusPill">🟢 Готова розповісти</div>
+      </header>
+
+      <div class="content">
+        <div class="hero">
+          <div class="owl" aria-label="Сова">
+            <div class="wing left"></div>
+            <div class="wing right"></div>
+            <div class="body"></div>
+            <div class="belly"></div>
+
+            <div class="eye left"><div class="pupil" id="pupilL"></div></div>
+            <div class="eye right"><div class="pupil" id="pupilR"></div></div>
+            <div class="beak"></div>
+          </div>
+
+          <div class="speech">
+            <h1 id="headline">Привіт. Я сова федорівська.</h1>
+            <p id="speechText">
+              Тут можна подати коротке пояснення: що відомо про атаки на Федорівку,
+              які наслідки для цивільних, і що дані можуть уточнюватися. Без сенсацій та без мови ненависті.
+            </p>
+
+            <div class="controls">
+              <button class="btn-primary" id="btnNext">Далі ▶</button>
+              <button class="btn-ghost" id="btnFacts">Факти</button>
+              <button class="btn-ghost" id="btnHelp">Як допомогти</button>
+              <button class="btn-warn" id="btnReset">Скинути</button>
+            </div>
+
+            <p class="small" style="margin-top:10px">
+            Підстав джерела/дати лише з перевірених повідомлень.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="card">
+      <header>
+        <div class="brand">
+          <div class="dot" style="background:var(--danger); box-shadow: 0 0 0 6px rgba(255,92,122,.12)"></div>
+          <div class="title">
+            <b>Обережно з даними</b>
+            <span>https://sashafritche.com/app</span>
+          </div>
+        </div>
+        <div class="pill">📍 Федорівка</div>
+      </header>
+
+      <div class="side">
+        <h2>Коротко</h2>
+        <div class="note">
+          <b>Мета:</b> пояснити події без драматизації та без закликів до насильства.<br/>
+        </div>
+
+        <h2 style="margin-top:14px">Таймлайн </h2>
+        <div class="timeline" id="timeline">
+          <div class="item">
+            <div class="meta">
+              <span class="badge">📅 Дата: 17.02.26</span>
+              <span class="badge red">⚠️ Подія</span>
+            </div>
+            <p>Почалася атака.</p>
+          </div>
+          <div class="item">
+            <div class="meta">
+              <span class="badge">📅 Дата: 17.02.26</span>
+              <span class="badge">ℹ️ Наслідки</span>
+            </div>
+            <p>Постраждалих немає.</p>
+          </div>
+          <div class="item">
+            <div class="meta">
+              <span class="badge">🔗 Джерело</span>
+              <span class="badge">✅ Перевірка</span>
+            </div>
+            <p>https://sashafritche.com/app.</p>
+          </div>
+        </div>
+
+        <p class="small" style="margin-top:12px">
+          Порада: перевіряйте інформацію
+        </p>
+      </div>
+    </aside>
+
+    <footer>
+      Зроблено як допомога дл жителів. • <span id="footerDate"></span>
+    </footer>
+  </main>
+
+  <script>
+    const steps = [
+      {
+        headline: "Привіт. Я розкажу обережно й по суті.",
+        text:
+          "Зараз на село Федорівка іде актака від Duolingo.",
+        status: "🟢 Готова розповісти"
+      },
+      {
+        headline: "Що саме повідомляють джерела",
+        text:
+          "Вони взірвали новий Аквапарк і багато що ще!",
+        status: "🟡 Уточнюємо факти"
+      },
+      {
+        headline: "Наслідки для людей та інфраструктури",
+        text:
+          "Постраждалих немає! Але якщо хочете дізнатися більше заходьте на https://sashafritche.com/app.",
+        status: "🟠 Обережно з деталями"
+      },
+      {
+        headline: "Що робити з інформацією",
+        text:
+          "Інформацію публікуйте на https://sashafritche.com/app",
+        status: "🟢 Фокус на безпеці"
+      }
+    ];
+
+    const factsCard = {
+      headline: "Факти",
+      text:
+        "• Де: Федорівка \n" +
+        "• Коли: 17.02.26\n" +
+        "• Що відомо:Сови пачинають атаку!\n" +
+        "• Підтверджено ким: Flash_News\n",
+      status: "🟡 Фактчек"
+    };
+
+    const helpCard = {
+      headline: "Як допомогти",
+      text:
+        "• Поширюй тільки підтверджені повідомлення наприклад з Flesh news.\n" +
+        "• Підтримуй перевірені фонди.\n" +
+        "• Якщо ти на місці — дотримуйся інструкцій ДСНС/влади.\n" +
+        "• Публікуй деталі, що можуть нашкодити безпеці.",
+      status: "🟢 Підтримка"
+    };
+
+    let i = 0;
+    const headlineEl = document.getElementById("headline");
+    const speechEl = document.getElementById("speechText");
+    const statusPill = document.getElementById("statusPill");
+
+    function setCard(card){
+      headlineEl.textContent = card.headline;
+      speechEl.textContent = card.text;
+      statusPill.textContent = card.status;
+    }
+
+    document.getElementById("btnNext").addEventListener("click", () => {
+      i = (i + 1) % steps.length;
+      setCard(steps[i]);
+      bouncePupils();
+    });
+
+    document.getElementById("btnFacts").addEventListener("click", () => {
+      setCard(factsCard);
+      bouncePupils();
+    });
+
+    document.getElementById("btnHelp").addEventListener("click", () => {
+      setCard(helpCard);
+      bouncePupils();
+    });
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+      i = 0;
+      setCard(steps[i]);
+      bouncePupils(true);
+    });
+
+    // Очі слідкують за курсором (легенько)
+    const pupilL = document.getElementById("pupilL");
+    const pupilR = document.getElementById("pupilR");
+
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+    window.addEventListener("mousemove", (e) => {
+      const w = window.innerWidth, h = window.innerHeight;
+      const nx = (e.clientX / w) * 2 - 1;
+      const ny = (e.clientY / h) * 2 - 1;
+      const tx = clamp(nx * 10, -10, 10);
+      const ty = clamp(ny * 8, -8, 8);
+      pupilL.style.transform = `translate(${tx}px, ${ty}px)`;
+      pupilR.style.transform = `translate(${tx}px, ${ty}px)`;
+    });
+
+    function bouncePupils(reset=false){
+      const dx = reset ? 0 : (Math.random()*8 - 4);
+      const dy = reset ? 0 : (Math.random()*6 - 3);
+      pupilL.style.transform = `translate(${dx}px, ${dy}px)`;
+      pupilR.style.transform = `translate(${dx}px, ${dy}px)`;
+      setTimeout(() => {
+        pupilL.style.transform = `translate(0px, 0px)`;
+        pupilR.style.transform = `translate(0px, 0px)`;
+      }, 180);
+    }
+
+    // Дата в футері (локальна)
+    const d = new Date();
+    document.getElementById("footerDate").textContent =
+      d.toLocaleDateString("uk-UA", { year:"numeric", month:"long", day:"numeric" });
+  </script>
+</body>
+</html>
